@@ -10,10 +10,10 @@ Java >= 1.8
 git clone https://github.com/dabliuw22/sb-oauth2-auth-server.git
 ```
 
-3. Switch to the jdbc-client branch:
+3. Switch to the jdbc-client-jwt branch:
 
 ```
-git checkout jdbc-client
+git checkout jdbc-client-jwt
 ```
 
 5. Running the project.
