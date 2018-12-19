@@ -1,0 +1,17 @@
+server:
+  port: 9090
+
+oauth2:
+  client:
+    id: clientapp
+    secret: secret.clientapp
+    
+security:
+  username: user
+  password: user.password
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
