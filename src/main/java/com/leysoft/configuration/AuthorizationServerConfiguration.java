@@ -1,6 +1,8 @@
 
 package com.leysoft.configuration;
 
+import java.util.Arrays;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +10,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -30,15 +35,25 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
     private DataSource dataSource;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private TokenEnhancer tokenEnhancer;
+
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        JwtAccessTokenConverter accessTokenConverter = accessTokenConverter();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer, accessTokenConverter));
         endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
-                .accessTokenConverter(accessTokenConverter());
+                .accessTokenConverter(accessTokenConverter).tokenEnhancer(tokenEnhancerChain)
+                .userDetailsService(userDetailsService);
     }
 
     @Override
@@ -48,7 +63,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.checkTokenAccess("permitAll()").passwordEncoder(passwordEncoder);
+        security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()")
+                .passwordEncoder(passwordEncoder);
     }
 
     @Bean
