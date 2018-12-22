@@ -19,11 +19,11 @@ import com.leysoft.util.Role;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value(
-            value = "${security.username}")
+            value = "${spring.security.user.name}")
     private String username;
 
     @Value(
-            value = "${security.password}")
+            value = "${spring.security.user.password}")
     private String password;
 
     @Override

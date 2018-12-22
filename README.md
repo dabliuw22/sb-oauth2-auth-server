@@ -1,10 +1,11 @@
-# Oauth2 Authorization Server
+redisredis# Oauth2 Authorization Server
 
-Authorization server that allows to store clients in SQL databases and generate JWT tokens, using the password grants.
+Authorization server that allows to store clients in SQL databases and tokens in Redis, using the password grants.
 
 1. Requirements:
 
-Java >= 1.8
+	* Java >= 1.8
+	* Redis
 
 2. Clone project:
 
@@ -12,10 +13,10 @@ Java >= 1.8
 git clone https://github.com/dabliuw22/sb-oauth2-auth-server.git
 ```
 
-3. Switch to the password-jdbc-client-jwt branch:
+3. Switch to the password-jdbc-client-redis branch:
 
 ```
-git checkout password-jdbc-client-jwt
+git checkout password-jdbc-client-redis
 ```
 
 4. Running the project.
