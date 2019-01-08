@@ -1,17 +1,19 @@
 server:
   port: 9090
 
+spring:
+  security:
+    user:
+      name: user
+      password: user.password
+
 oauth2:
   client:
     id: clientapp
     secret: secret.clientapp
-    redirect-uri: http://localhost:9091
+    redirect-uri: http://localhost:9091/callback
     access-token-validity-seconds: 60
     refresh-token-validity-seconds: 120
-    
-security:
-  username: user
-  password: user.password
 
 jwt:
   signature: jwt.signature

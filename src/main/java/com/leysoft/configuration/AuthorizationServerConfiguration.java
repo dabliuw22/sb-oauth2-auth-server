@@ -72,7 +72,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                         GrantTypes.REFRESH_TOKEN.toString())
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)
                 .refreshTokenValiditySeconds(refreshTokenValiditySeconds)
-                .scopes(Scope.READ.toString());
+                .scopes(Scope.READ.toString(), Scope.WRITE.toString()).autoApprove(false);
     }
 
     @Override

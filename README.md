@@ -19,12 +19,12 @@ git checkout auth-code-memory-client
 
 4. Running the project.
 
-5. Obtain authorization code [here](http://localhost:9090/oauth/authorize?client_id=clientapp&redirect_uri=http://localhost:9091&response_type=code&scope=read)
+5. Obtain authorization code [here](http://localhost:9090/oauth/authorize?client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read)
    and copy the code. `username: user` and `password: user.password`
 
 6. Make request to get the bearer token to the endpoint `/oauth/token`.
 
 ```
 curl -X POST -u clientapp:secret.clientapp\
-  'http://localhost:9090/oauth/token?grant_type=authorization_code&code={YOUR_CODE}&scope=read&redirect_uri=http://localhost:9091'
+  'http://localhost:9090/oauth/token?grant_type=authorization_code&code={YOUR_CODE}&scope=read&redirect_uri=http://localhost:9091/callback'
 ```
