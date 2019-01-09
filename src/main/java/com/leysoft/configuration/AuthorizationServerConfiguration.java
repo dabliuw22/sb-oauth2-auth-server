@@ -1,6 +1,10 @@
 
 package com.leysoft.configuration;
 
+import java.util.Arrays;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,12 +17,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-
-import com.leysoft.util.GrantTypes;
-import com.leysoft.util.Scope;
 
 @Configuration
 @EnableAuthorizationServer
@@ -28,26 +31,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             value = "${jwt.signature}")
     private String signatureKey;
 
-    @Value(
-            value = "${oauth2.client.id}")
-    private String clientId;
-
-    @Value(
-            value = "${oauth2.client.secret}")
-    private String secretClient;
-
-    @Value(
-            value = "${oauth2.client.redirect-uri}")
-    private String redirectUrl;
-
-    @Value(
-            value = "${oauth2.client.access-token-validity-seconds}")
-    private int accessTokenValiditySeconds;
-
-    @Value(
-            value = "${oauth2.client.refresh-token-validity-seconds}")
-    private int refreshTokenValiditySeconds;
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -55,24 +38,27 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private UserDetailsService userDetailsService;
 
     @Autowired
+    private DataSource dataSource;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TokenEnhancer tokenEnhancer;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        JwtAccessTokenConverter accessTokenConverter = accessTokenConverter();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer, accessTokenConverter));
         endpoints.authenticationManager(authenticationManager).tokenStore(tokenStore())
-                .accessTokenConverter(accessTokenConverter())
+                .accessTokenConverter(accessTokenConverter).tokenEnhancer(tokenEnhancerChain)
                 .userDetailsService(userDetailsService);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient(clientId).secret(passwordEncoder.encode(secretClient))
-                .redirectUris(redirectUrl)
-                .authorizedGrantTypes(GrantTypes.AUTHORIZATION_CODE.toString(),
-                        GrantTypes.REFRESH_TOKEN.toString())
-                .accessTokenValiditySeconds(accessTokenValiditySeconds)
-                .refreshTokenValiditySeconds(refreshTokenValiditySeconds)
-                .scopes(Scope.READ.toString(), Scope.WRITE.toString()).autoApprove(false);
+        clients.jdbc(dataSource).passwordEncoder(passwordEncoder);
     }
 
     @Override
