@@ -1,6 +1,6 @@
 # Oauth2 Authorization Server
 
-Authorization server that allows you to store clients in memory and generate JWT tokens, using the authorization_code grants.
+Authorization server that allows you to store clients SQL databases and generate JWT tokens, using the authorization_code grants.
 
 1. Requirements:
 	* Java >= 1.8
@@ -11,10 +11,10 @@ Authorization server that allows you to store clients in memory and generate JWT
 git clone https://github.com/dabliuw22/sb-oauth2-auth-server.git
 ```
 
-3. Switch to the `auth-code-memory-client` branch:
+3. Switch to the `auth-code-jdbc-client-jwt` branch:
 
 ```
-git checkout auth-code-memory-client
+git checkout auth-code-jdbc-client-jwt
 ```
 
 4. Running the project.
