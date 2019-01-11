@@ -3,8 +3,6 @@ package com.leysoft.configuration;
 
 import java.util.Arrays;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +21,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import com.leysoft.service.JpaClientDetailsService;
+
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
@@ -38,7 +38,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private DataSource dataSource;
+    private JpaClientDetailsService clientDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -58,7 +58,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.jdbc(dataSource).passwordEncoder(passwordEncoder);
+        clients.withClientDetails(clientDetailsService);
     }
 
     @Override
