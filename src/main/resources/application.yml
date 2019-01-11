@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    jdbc-url: jdbc:h2:mem:oauth2
+    url: jdbc:h2:mem:oauth2
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -14,6 +14,11 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
       
   security:
     user:
@@ -22,6 +27,12 @@ spring:
 
 jwt:
   signature: jwt.signature
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
 
 management:
   endpoints:
