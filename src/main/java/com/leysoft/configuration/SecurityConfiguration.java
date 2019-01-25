@@ -11,11 +11,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.leysoft.util.CustomNoopPasswordEncoder;
 import com.leysoft.util.Role;
+import com.leysoft.util.SecurityUtils;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -57,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     @Primary
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return SecurityUtils.getBCryptPasswordEncoderInstance();
     }
 
     @Bean(
@@ -65,6 +64,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "noopPasswordEncoder"
             })
     public PasswordEncoder noopPasswordEncoder() {
-        return new CustomNoopPasswordEncoder();
+        return SecurityUtils.getNoopPasswordEncoderInstance();
     }
 }
