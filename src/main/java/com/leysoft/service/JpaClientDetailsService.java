@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -28,16 +27,13 @@ public class JpaClientDetailsService implements ClientDetailsService, ClientRegi
     @Autowired
     private CustomClientDetailsRepository clientDetailsRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Override
     public void addClientDetails(ClientDetails clientDetails) throws ClientAlreadyExistsException {
         if (clientDetails instanceof CustomClientDetails) {
             String clientSecret = UUID.randomUUID().toString();
             LOGGER.info("SECRET: {}", clientSecret);
             CustomClientDetails client = (CustomClientDetails) clientDetails;
-            client.setClientSecret(passwordEncoder.encode(clientSecret));
+            client.setClientSecret(clientSecret);
             clientDetailsRepository.save(client);
         }
     }
