@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leysoft.entity.CustomClientDetails;
-import com.leysoft.service.JpaClientDetailsService;
+import com.leysoft.service.imple.ClientDetailsServiceImp;
 
 @RestController
 @RequestMapping(
@@ -24,7 +24,7 @@ import com.leysoft.service.JpaClientDetailsService;
 public class ClientController {
 
     @Autowired
-    private JpaClientDetailsService clientDetailsService;
+    private ClientDetailsServiceImp clientDetailsService;
 
     @GetMapping
     public ResponseEntity<CustomClientDetails> getByClientId(@RequestParam(

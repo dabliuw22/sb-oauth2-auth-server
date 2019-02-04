@@ -11,10 +11,10 @@ Authorization server that allows you to store clients SQL databases and generate
 git clone https://github.com/dabliuw22/sb-oauth2-auth-server.git
 ```
 
-3. Switch to the `auth-code-jdbc-client-jwt` branch:
+3. Switch to the `auth-code-jpa-client-jwt` branch:
 
 ```
-git checkout auth-code-jdbc-client-jwt
+git checkout auth-code-jpa-client-jwt
 ```
 
 4. Running the project.
