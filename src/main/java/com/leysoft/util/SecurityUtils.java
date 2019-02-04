@@ -1,12 +1,17 @@
 
 package com.leysoft.util;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class SecurityUtils {
 
     private SecurityUtils() {
+    }
+
+    public static String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     public static PasswordEncoder getBCryptPasswordEncoderInstance() {
