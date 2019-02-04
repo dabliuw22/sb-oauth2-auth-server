@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
-import com.leysoft.service.JpaClientDetailsService;
+import com.leysoft.service.imple.ClientDetailsServiceImp;
 
 @Configuration
 @EnableAuthorizationServer
@@ -39,7 +39,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private JpaClientDetailsService clientDetailsService;
+    private ClientDetailsServiceImp clientDetailsService;
 
     @Autowired
     @Qualifier(

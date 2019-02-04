@@ -1,5 +1,5 @@
 
-package com.leysoft.service;
+package com.leysoft.service.imple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ import com.leysoft.entity.CustomClientDetails;
 import com.leysoft.repository.CustomClientDetailsRepository;
 
 @Service
-public class JpaClientDetailsService implements ClientDetailsService, ClientRegistrationService {
+public class ClientDetailsServiceImp implements ClientDetailsService, ClientRegistrationService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JpaClientDetailsService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientDetailsServiceImp.class);
 
     @Autowired
     private CustomClientDetailsRepository clientDetailsRepository;
