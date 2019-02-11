@@ -41,7 +41,7 @@ public class CustomUserServiceImp implements CustomUserService {
         CustomUser user = null;
         try {
             String currentUsername = SecurityUtils.getCurrentUsername();
-            if (!Objects.isNull(currentUsername)) {
+            if (Objects.nonNull(currentUsername)) {
                 user = getUserByUsername(currentUsername);
             }
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class CustomUserServiceImp implements CustomUserService {
         boolean deleted = false;
         try {
             CustomUser user = getUserById(id);
-            if (user != null) {
+            if (Objects.nonNull(user)) {
                 customUserRepository.deleteById(id);
                 deleted = true;
             }
