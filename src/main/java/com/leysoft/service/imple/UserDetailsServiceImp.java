@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.leysoft.entity.CustomUser;
 import com.leysoft.repository.CustomUserRepository;
+import com.leysoft.util.SecurityUtils;
 
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
@@ -23,7 +24,8 @@ public class UserDetailsServiceImp implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         CustomUser user = customUserDetailsRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE + username));
-        return new User(user.getUsername(), user.getPassword(), user.getAuthorities());
+        return new User(user.getUsername(), user.getPassword(),
+                SecurityUtils.toAuthorities(user.getRoles()));
 
     }
 

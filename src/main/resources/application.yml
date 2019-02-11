@@ -24,7 +24,8 @@ spring:
     property-naming-strategy: SNAKE_CASE
 
 jwt:
-  signature: jwt.signature
+  signature: jwt.signature.secure.jwt.my-signature.key
+  time-to-live: 120000
 
 logging:
   level:
