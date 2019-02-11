@@ -22,6 +22,8 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(
         name = "users")
@@ -43,6 +45,7 @@ public class CustomUser implements Serializable {
             unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(
             nullable = false)
     private String password;
@@ -123,6 +126,7 @@ public class CustomUser implements Serializable {
         return enabled;
     }
 
+    @JsonIgnore
     public Set<GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
         roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
