@@ -1,9 +1,17 @@
 
 package com.leysoft.util;
 
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.leysoft.entity.CustomRole;
 
 public class SecurityUtils {
 
@@ -12,6 +20,15 @@ public class SecurityUtils {
 
     public static String getCurrentUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public static Set<GrantedAuthority> toAuthorities(Set<CustomRole> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toSet());
+    }
+
+    public static Set<String> toStrings(Collection<GrantedAuthority> authorities) {
+        return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
     }
 
     public static PasswordEncoder getBCryptPasswordEncoderInstance() {
@@ -30,5 +47,15 @@ public class SecurityUtils {
                 return rawPassword.toString();
             }
         };
+    }
+
+    public static class Name {
+
+        public static final String USERNAME_NAME = "username";
+
+        public static final String PASW_NAME = "password";
+
+        private Name() {
+        }
     }
 }

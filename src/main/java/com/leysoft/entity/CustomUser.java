@@ -19,9 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -124,13 +121,6 @@ public class CustomUser implements Serializable {
 
     public boolean isEnabled() {
         return enabled;
-    }
-
-    @JsonIgnore
-    public Set<GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-        return authorities;
     }
 
     @Override
