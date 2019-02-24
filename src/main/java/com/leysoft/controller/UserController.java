@@ -2,7 +2,6 @@
 package com.leysoft.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leysoft.entity.CustomUser;
 import com.leysoft.service.inter.CustomUserService;
-import com.leysoft.service.inter.JwtService;
 
 @RestController
 @RequestMapping(
@@ -22,15 +20,8 @@ import com.leysoft.service.inter.JwtService;
         })
 public class UserController {
 
-    @Value(
-            value = "${jwt.signature}")
-    private String signatureKey;
-
     @Autowired
     private CustomUserService customUserService;
-
-    @Autowired
-    private JwtService jwtService;
 
     @PreAuthorize(
             value = "hasRole('ADMIN')")
@@ -48,8 +39,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<CustomUser> getUser(@RequestHeader(
             value = "Authorization",
-            required = true) String authorizationHeader) {
-        jwtService.decode(authorizationHeader, signatureKey);
+            required = false) String authorizationHeader) {
         return ResponseEntity.ok(customUserService.getUser());
     }
 }

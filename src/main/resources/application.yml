@@ -25,7 +25,10 @@ spring:
 
 jwt:
   signature: jwt.signature.secure.jwt.my-signature.key
-  time-to-live: 120000
+
+security:
+  matchers:
+    login: /login
 
 logging:
   level:
