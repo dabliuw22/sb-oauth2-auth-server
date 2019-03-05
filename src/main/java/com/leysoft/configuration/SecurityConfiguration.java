@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -19,11 +18,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.leysoft.handler.DynamicAuthenticationFailureHandler;
+import com.leysoft.handler.DynamicAuthenticationSuccessHandler;
 import com.leysoft.util.SecurityUtils;
 
 @Configuration
-@Order(
-        value = 1)
 @EnableGlobalMethodSecurity(
         prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -31,10 +30,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value(
             value = "${security.matchers.login}")
     private String loginPath;
-
-    @Value(
-            value = "${jwt.signature}")
-    private String signature;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -50,8 +45,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll().antMatchers(HttpMethod.POST, "/user").permitAll().anyRequest()
                 .authenticated();
         http.formLogin().loginPage(loginPath).usernameParameter(SecurityUtils.Name.USERNAME_NAME)
-                .passwordParameter(SecurityUtils.Name.PASW_NAME).defaultSuccessUrl("/", true)
-                .failureUrl("/login?error");
+                .passwordParameter(SecurityUtils.Name.PASW_NAME)
+                .successHandler(new DynamicAuthenticationSuccessHandler("/"))
+                .failureHandler(new DynamicAuthenticationFailureHandler(loginPath + "?error=true"));
         http.rememberMe().rememberMeParameter("remember-me")
                 .tokenValiditySeconds(60 * 60 * 60 * 24 * 5).key("key_remember");
         http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

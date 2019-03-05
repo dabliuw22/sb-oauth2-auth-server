@@ -4,6 +4,7 @@ Authorization server that allows you to store clients SQL databases and generate
 
 1. Requirements:
 	* Java >= 1.8
+	* Redis
 
 2. Clone project:
 
@@ -19,9 +20,9 @@ git checkout auth-code-jpa-client-jwt-login
 
 4. Running the project.
 
-5. Login [here](http://localhost:9090/login) with `username: user` and `password: user.password`.
+5. Login [here](http://localhost:9090/login) with `username: user` and `password: user.password` and obtain authorization code [here](http://localhost:9090/oauth/authorize?client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read) and copy the code.
 
-6. Obtain authorization code [here](http://localhost:9090/oauth/authorize?client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read) and copy the code.
+6. Or login here [here](http://localhost:9090/login?protocol=oauth2&client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read) with `username: user` and `password: user.password`
 
 7. Make request to get the bearer token to the endpoint `/oauth/token`.
 

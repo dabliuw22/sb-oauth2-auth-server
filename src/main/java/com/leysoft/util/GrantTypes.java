@@ -19,5 +19,4 @@ public enum GrantTypes {
     public String toString() {
         return value;
     }
-
 }

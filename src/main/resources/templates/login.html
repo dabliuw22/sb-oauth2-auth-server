@@ -13,9 +13,9 @@
 			    <label for="password">Password</label>
 			    <input type="password" name="password" id="password" placeholder="password"/>
 		  	</div>
-		  	<div>
-				<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me"/>
-    			<label class="form-check-label" for="remember-me">Remember-me</label>
+			<div>
+				<input type="checkbox" name="remember-me" id="remember-me"/>
+    			<label for="remember-me">Remember-me</label>
 			</div>
 			<small th:if="${param.error != null}" th:text="'Error de credenciales'"></small>
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

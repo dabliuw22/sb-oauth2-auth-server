@@ -2,13 +2,16 @@
 package com.leysoft.util;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -23,10 +26,13 @@ public class SecurityUtils {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    public static User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     public static Set<GrantedAuthority> toAuthorities(Set<CustomRole> roles) {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-        return authorities;
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toSet());
     }
 
     public static Set<String> toStrings(Collection<GrantedAuthority> authorities) {
@@ -57,7 +63,79 @@ public class SecurityUtils {
 
         public static final String PASW_NAME = "password";
 
+        public static final String PROTOCOL_NAME = "protocol";
+
+        public static final String CLIENT_ID_NAME = "client_id";
+
+        public static final String REDIRECT_URI_NAME = "redirect_uri";
+
+        public static final String RESPONSE_TYPE_NAME = "response_type";
+
+        public static final String SCOPE_NAME = "scope";
+
         private Name() {
+        }
+    }
+
+    public static class Oauth2 {
+
+        public static final String PROTOCOL = "oauth2";
+
+        public static final String OAUTH_AUTHORIZE_ENDPOINT = "/oauth/authorize";
+
+        private Oauth2() {
+        }
+
+        public static String buildUrl(String clientId, String redirectUri, String responseType,
+                String scope) {
+            return OAUTH_AUTHORIZE_ENDPOINT + "?" + Name.CLIENT_ID_NAME + "=" + clientId + "&"
+                    + Name.REDIRECT_URI_NAME + "=" + redirectUri + "&" + Name.RESPONSE_TYPE_NAME
+                    + "=" + responseType + "&" + Name.SCOPE_NAME + "=" + scope;
+        }
+
+        public static String buildParameters(String protocol, String clientId, String redirectUri,
+                String responseType, String scope) {
+            return Name.PROTOCOL_NAME + "=" + protocol + "&" + Name.CLIENT_ID_NAME + "=" + clientId
+                    + "&" + Name.REDIRECT_URI_NAME + "=" + redirectUri + "&"
+                    + Name.RESPONSE_TYPE_NAME + "=" + responseType + "&" + Name.SCOPE_NAME + "="
+                    + scope;
+        }
+    }
+
+    public static class Session {
+
+        public static final String REDIRECT_LOGIN_URI_NAME = "redirect_login_uri";
+
+        public static final String PARAMETERS_FAILURE_LOGIN_NAME = "parameters_login";
+
+        private Session() {
+        }
+
+        public static void loginOperation(String protocol, String clientId, String redirectUri,
+                String responseType, String scope, HttpSession session) {
+            remove(session, REDIRECT_LOGIN_URI_NAME);
+            remove(session, PARAMETERS_FAILURE_LOGIN_NAME);
+            if (Objects.nonNull(protocol) && protocol.equals(Oauth2.PROTOCOL)
+                    && Objects.nonNull(clientId) && Objects.nonNull(redirectUri)
+                    && Objects.nonNull(responseType) && Objects.nonNull(scope)) {
+                String url = Oauth2.buildUrl(clientId, redirectUri, responseType, scope);
+                String params = Oauth2.buildParameters(protocol, clientId, redirectUri,
+                        responseType, scope);
+                add(session, REDIRECT_LOGIN_URI_NAME, url);
+                add(session, PARAMETERS_FAILURE_LOGIN_NAME, params);
+            }
+        }
+
+        public static void add(HttpSession session, String name, Object value) {
+            session.setAttribute(name, value);
+        }
+
+        public static void remove(HttpSession session, String name) {
+            session.removeAttribute(name);
+        }
+
+        public static Object get(HttpSession session, String name) {
+            return session.getAttribute(name);
         }
     }
 }
