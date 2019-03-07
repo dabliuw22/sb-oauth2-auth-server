@@ -1,6 +1,7 @@
 
 package com.leysoft.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -126,7 +127,7 @@ public class SecurityUtils {
             }
         }
 
-        public static void add(HttpSession session, String name, Object value) {
+        public static <T extends Serializable> void add(HttpSession session, String name, T value) {
             session.setAttribute(name, value);
         }
 
