@@ -35,6 +35,10 @@ public class BasicController {
             @RequestParam(
                     value = SecurityUtils.Name.SCOPE_NAME,
                     required = false) String scope) {
+        if (SecurityUtils.isAuthenticated()) {
+            return SecurityUtils.Session.redirectOperation(protocol, clientId, redirectUri,
+                    responseType, scope);
+        }
         SecurityUtils.Session.loginOperation(protocol, clientId, redirectUri, responseType, scope,
                 session);
         return "login";

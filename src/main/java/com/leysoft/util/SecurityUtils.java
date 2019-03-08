@@ -1,6 +1,7 @@
 
 package com.leysoft.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -8,10 +9,11 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,12 +24,16 @@ public class SecurityUtils {
     private SecurityUtils() {
     }
 
-    public static String getCurrentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+    public static Authentication getCurrentAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public static User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public static String getCurrentUsername() {
+        return getCurrentAuthentication().getName();
+    }
+
+    public static boolean isAuthenticated() {
+        return !(getCurrentAuthentication() instanceof AnonymousAuthenticationToken);
     }
 
     public static Set<GrantedAuthority> toAuthorities(Set<CustomRole> roles) {
@@ -126,7 +132,18 @@ public class SecurityUtils {
             }
         }
 
-        public static void add(HttpSession session, String name, Object value) {
+        public static String redirectOperation(String protocol, String clientId, String redirectUri,
+                String responseType, String scope) {
+            if (Objects.nonNull(protocol) && protocol.equals(Oauth2.PROTOCOL)
+                    && Objects.nonNull(clientId) && Objects.nonNull(redirectUri)
+                    && Objects.nonNull(responseType) && Objects.nonNull(scope)) {
+                return "redirect:" + Oauth2.buildUrl(clientId, redirectUri, responseType, scope);
+            } else {
+                return "redirect:/";
+            }
+        }
+
+        public static <T extends Serializable> void add(HttpSession session, String name, T value) {
             session.setAttribute(name, value);
         }
 

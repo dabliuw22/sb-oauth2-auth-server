@@ -6,25 +6,31 @@ Authorization server that allows you to store clients SQL databases and generate
 	* Java >= 1.8
 	* Redis
 
-2. Clone project:
+2. Run Redis with docker:
+```
+docker image pull redis
+docker container run -d --name redis -p 6379:6379 redis
+```
+
+3. Clone project:
 
 ```
 git clone https://github.com/dabliuw22/sb-oauth2-auth-server.git
 ```
 
-3. Switch to the `auth-code-jpa-client-jwt-login` branch:
+4. Switch to the `auth-code-jpa-client-jwt-login` branch:
 
 ```
 git checkout auth-code-jpa-client-jwt-login
 ```
 
-4. Running the project.
+5. Running the project.
 
-5. Login [here](http://localhost:9090/login) with `username: user` and `password: user.password` and obtain authorization code [here](http://localhost:9090/oauth/authorize?client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read) and copy the code.
+6. Login [here](http://localhost:9090/login) with `username: user` and `password: user.password` and obtain authorization code [here](http://localhost:9090/oauth/authorize?client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read) and copy the code.
 
-6. Or login here [here](http://localhost:9090/login?protocol=oauth2&client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read) with `username: user` and `password: user.password`
+7. Or login here [here](http://localhost:9090/login?protocol=oauth2&client_id=clientapp&redirect_uri=http://localhost:9091/callback&response_type=code&scope=read) with `username: user` and `password: user.password`
 
-7. Make request to get the bearer token to the endpoint `/oauth/token`.
+8. Make request to get the bearer token to the endpoint `/oauth/token`.
 
 ```
 curl -X POST -u clientapp:secret.clientapp\
